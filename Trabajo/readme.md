@@ -28,16 +28,15 @@ La forma de detectar las caidas es el siguiente:
 Para ello el algoritmo deberia funcionar de la siguiente manera:
 - Tomar medidas periodicamente de la aceleracion y la orientacion. Por ejemplo cada 10 ms mediante un timer (Se puede ajustar para tomar mas o menos medidas)
 - Calcular el valor absoluto de la aceleracion.
-- Comparar la aceleracion con un registro de los ultimos valores registrados.
 - Si se supera un umbral, comprobar un periodo de inactividad posterior para corroborar la caida.
 - Si se confirma que se ha producido una caida se manda una notificacion por Bluetooth avisando de una posible caida.
 
 Necesario:
 - Timer
 - Comunicacion SPI/I2C
-- Array para almacenar datos
 - Conexion BLE
-- 
+
+
 
 
 
