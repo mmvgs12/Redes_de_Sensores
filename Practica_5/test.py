@@ -8,10 +8,10 @@ baudrate = 19200
 Port = 'COM2'
 
 
-def PortExists(DesPort='COM1'):
+def PortExists(DesPort='COM5'):
     
     ports_list = [port.device for port in serial.tools.list_ports.comports()]
-
+    #return ports_list
     return DesPort in ports_list
 
 
@@ -29,21 +29,26 @@ def ReadFromSerial(ser, Port = "COM7"):
         print("Error, el puerto no existe")
 
 
-def AddtoList(List_name = "Save.txt", line ):
+def AddtoList(List_name = "Save.txt", line = None):
 
     with open(List_name, 'a') as list:
-        list.write("")
+        if not list.readline(0).startswith("numero"):
+
+            list.write("numero de mensaje // eje x // eje y // eje z")
+        else:
+            list.write(line)
 
 
 
      
 def main():
-    print(PortExists("COM7"))
+    print(PortExists("COM5"))
     try:
-       with serial.Serial(port="COM7", baudrate = 19200) as ser:
+       with serial.Serial(port="COM5", baudrate = 19200) as ser:
            for i in range (0,100,1):
                 print("lectura numero: " + str(i))
-                ReadFromSerial(ser)
+                ln=ReadFromSerial(ser)
+                AddtoList(ln)
     except:
         print("Error, no se ha podido crear el puerto")
 
