@@ -6,10 +6,21 @@ const char* password = "hcun4ezw8y3wd4b";
 const char* TZ_INFO = "CET-1CEST,M3.5.0,M10.5.0/3";
 const char* ntpServer = "europe.pool.ntp.org";
 IPAddress server_ip(10,189,115,97); 
-const uint16_t port = 500;
+const uint16_t port = 5000;
 WiFiClient wifi_client;
 
 bool Sending = false;
+
+struct AccelData simulateAccel() {
+  // Simula vibración sinusoidal con algo de ruido
+  static float t = 0.0f;
+  t += 0.1f;
+  AccelData data;
+  data.x = sin(t) * 1.5f + ((float)random(-50, 50) / 1000.0f);
+  data.y = cos(t * 0.7f) * 0.8f + ((float)random(-50, 50) / 1000.0f);
+  data.z = 1.0f + sin(t * 1.3f) * 0.3f + ((float)random(-50, 50) / 1000.0f);
+  return data;
+}
 
 // Function that prints formatted date and time
 String printDateTime() {
@@ -40,13 +51,21 @@ void setup() {
   Serial.println("NTP time configured.");
   Serial.print("Connecting to client...");
 
+    // Conectar TCP
+  Serial.print("Connecting to TCP server...");
+  while (!wifi_client.connect(server_ip, port)) {
+    delay(1000);
+    Serial.print('.');
+  }
+  Serial.println("\nTCP connected!");
+
   while(wifi_client.connected() == 0) {
     if (wifi_client.connect(server_ip, port) == 1) {
       Serial.println("¡Conectado!");
     }
     delay(1000);
   }
-
+  
 }
 
 void loop() {
@@ -67,10 +86,19 @@ void loop() {
       Sending = false;
     }
   }
-  if (Sending) {
+if (Sending) {
+    AccelData accel = simulateAccel();
     String timestamp = printDateTime();
-    wifi_client.println(timestamp);
-    Serial.println("Enviado: " + timestamp);
-    delay(1000);
+
+    // Formato CSV: timestamp,x,y,z
+    String payload = timestamp
+      + "," + String(accel.x, 4)
+      + "," + String(accel.y, 4)
+      + "," + String(accel.z, 4);
+
+    wifi_client.println(payload);
+    Serial.println("Sent: " + payload);
+
+    delay(100); // 10 Hz
   }
 }
