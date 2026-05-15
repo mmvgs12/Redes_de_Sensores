@@ -11,7 +11,11 @@ WiFiClient wifi_client;
 
 bool Sending = false;
 
-struct AccelData simulateAccel() {
+struct AccelData {
+  float x, y, z;
+};
+
+AccelData simulateAccel() {
   // Simula vibración sinusoidal con algo de ruido
   static float t = 0.0f;
   t += 0.1f;
@@ -72,7 +76,7 @@ void loop() {
   // put your main code here, to run repeatedly:
   // Print formatted date and time
   //printDateTime();
-
+  int i = 0;
   if (wifi_client.available() > 0) {
     Serial.println("Mensaje recibido del host");
     String mensaje = wifi_client.readStringUntil('\n');
@@ -91,14 +95,14 @@ if (Sending) {
     String timestamp = printDateTime();
 
     // Formato CSV: timestamp,x,y,z
-    String payload = timestamp
-      + "," + String(accel.x, 4)
-      + "," + String(accel.y, 4)
-      + "," + String(accel.z, 4);
-
+    String payload = i
+      + ";" + String(accel.x, 4)
+      + ";" + String(accel.y, 4)
+      + ";" + String(accel.z, 4);
+  
     wifi_client.println(payload);
     Serial.println("Sent: " + payload);
-
+    i+=1;
     delay(100); // 10 Hz
   }
 }
