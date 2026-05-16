@@ -2,9 +2,9 @@
 #include <Arduino.h>
 #include <Adafruit_NeoPixel.h>
 
-const int LED_PIN = 8; // LED integrado en la mayoría de placas ESP32
-const int NUM_LEDS = 1;
-Adafruit_NeoPixel strip(NUM_LEDS, LED_PIN, NEO_GRB + NEO_KHZ800); // Necesario para funcionar en el ESP32-C6
+#define NEO_PIN  8
+#define NUM_LEDS 1
+Adafruit_NeoPixel strip(NUM_LEDS, NEO_PIN, NEO_GRB + NEO_KHZ800); // Necesario para funcionar en el ESP32-C6
 
 //Tarea 1: Parpadeo de LED cada 200 ms 
 void taskBlink(void *pvParameters) {
