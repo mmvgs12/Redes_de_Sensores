@@ -1,25 +1,21 @@
-int ADC = A0;
-int ADC_resolution = 12;
+
+const int ADC_PIN = A0;
+int raw = 0;
+float voltage = 0;
+char buf[64];
 
 void setup() {
-
-Serial.begin(19200);
-
-analogReadResolution(ADC_resolution);
-
+  Serial.begin(115200);
+  while (!Serial);
+  analogReadResolution(12); // Nano 33 BLE soporta 12 bits (0-4095)
+  Serial.println("=== Lectura ADC cada 1 segundo ===");
 }
 
 void loop() {
 
-sprintf(buffer, "La tension de entrada es: %v", valor_V);
-Serial.println(valor_V);
-delay(1000);
-
-}
-
-int leerADC(float Vmax, int resolution){
-
-  lectura_ADC = analogRead(ADC);
-  return lectura_ADC *(Vmax / ((2^resolution)-1));
-
+  raw = analogRead(ADC_PIN);
+  voltage = raw * 3.3f / 4095.0f;
+  sprintf(buf, "ADC raw: %4d  |  Tensión: %.3f V", raw, voltage);
+  Serial.println(buf);
+  delay(1000);
 }

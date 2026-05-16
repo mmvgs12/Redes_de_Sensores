@@ -20,7 +20,7 @@
 // there is no explicit parameter, bounds, or nullptr error checking.
 
 #pragma once
-#include <nrf_timer.h>
+#include <nrf.h> 
 
 typedef enum {
 	BB_TIMER0 = 0,
