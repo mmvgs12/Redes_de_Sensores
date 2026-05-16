@@ -38,8 +38,7 @@ void imuRead() {
   int16_t rz = Wire1.read() | (Wire1.read() << 8);
 
   // Sensibilidad del LSM9DS1 en modo ±2g: 0.061 mg/LSB
-  // 0.061 mg/LSB × 0.00981
-  const float scale = 0.061f * 0.00981f;
+  const float scale = 0.061f * 0.000981f; 
   ax = rx * scale;
   ay = ry * scale;
   az = rz * scale;
@@ -57,6 +56,7 @@ void setup() {
   while (!Serial); // esperar a que el monitor serie esté listo (necesario en Nano 33 BLE)
 
   // Iniciar Wire como esclavo I2C ANTES que Wire1/IMU
+
   Wire.begin(I2C_SLAVE_ADDR);
   Wire.onRequest(onRequest); // registrar callback para peticiones del maestro
   Serial.println("I2C esclavo OK en 0x55");
